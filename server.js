@@ -36,7 +36,7 @@ const philosophersData = [
     era: "古希腊",
     years: "428-348 BC",
     school: "理念论",
-    summary: "柏拉图是苏格拉底的学生，创立了理念论，建立了西方第一个高等学府"学院"。"
+    summary: "柏拉图是苏格拉底的学生，创立了理念论，建立了西方第一个高等学府'学院'。"
   },
   {
     id: "aristotle",
