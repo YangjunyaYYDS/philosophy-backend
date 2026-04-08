@@ -271,6 +271,33 @@ app.get('/api/philosophers/:id', (req, res) => {
   }
 });
 
+// 概念搜索接口
+app.get('/api/concepts/search', (req, res) => {
+  const q = req.query.q?.toLowerCase().trim() || '';
+  if (!q) {
+    return res.json({ results: [] });
+  }
+
+  const results = [];
+  philosophersData.forEach(p => {
+    if (p.keyConcepts) {
+      p.keyConcepts.forEach(c => {
+        if (c.term?.toLowerCase().includes(q) || c.definition?.toLowerCase().includes(q)) {
+          results.push({
+            philosopherId: p.id,
+            philosopher: p.name,
+            concept: c.term,
+            definition: c.definition,
+            explanation: p.thoughtSummary?.substring(0, 100) + '...'
+          });
+        }
+      });
+    }
+  });
+
+  res.json({ results: results.slice(0, 10) });
+});
+
 // AI 问答接口
 app.post('/api/ask', async (req, res) => {
   const { question, sessionId, depth = 'standard' } = req.body;
