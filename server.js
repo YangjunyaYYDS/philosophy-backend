@@ -18,15 +18,62 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// 哲学家数据（内嵌示例数据，避免文件路径问题）
+const philosophersData = [
+  {
+    id: "socrates",
+    name: "苏格拉底",
+    nameEn: "Socrates",
+    era: "古希腊",
+    years: "470-399 BC",
+    school: "古希腊哲学",
+    summary: "苏格拉底是古希腊哲学的奠基人之一，以其问答法（苏格拉底方法）闻名。"
+  },
+  {
+    id: "plato",
+    name: "柏拉图",
+    nameEn: "Plato",
+    era: "古希腊",
+    years: "428-348 BC",
+    school: "理念论",
+    summary: "柏拉图是苏格拉底的学生，创立了理念论，建立了西方第一个高等学府"学院"。"
+  },
+  {
+    id: "aristotle",
+    name: "亚里士多德",
+    nameEn: "Aristotle",
+    era: "古希腊",
+    years: "384-322 BC",
+    school: "逍遥学派",
+    summary: "亚里士多德是柏拉图的学生，百科全书式的学者，逻辑学、物理学、伦理学等领域的奠基人。"
+  },
+  {
+    id: "confucius",
+    name: "孔子",
+    nameEn: "Confucius",
+    era: "春秋时期",
+    years: "551-479 BC",
+    school: "儒家",
+    summary: "孔子是中国古代思想家、教育家，儒家学派创始人，其思想对中国文化影响深远。"
+  },
+  {
+    id: "laozi",
+    name: "老子",
+    nameEn: "Laozi",
+    era: "春秋时期",
+    years: "约6世纪 BC",
+    school: "道家",
+    summary: "老子是道家学派创始人，《道德经》作者，主张无为而治、道法自然。"
+  }
+];
+
 // API 路由
 app.get('/api/philosophers', (req, res) => {
-  const philosophers = require('../philosophy-data/philosophers.json');
-  res.json(philosophers);
+  res.json(philosophersData);
 });
 
 app.get('/api/philosophers/:id', (req, res) => {
-  const philosophers = require('../philosophy-data/philosophers.json');
-  const philosopher = philosophers.find(p => p.id === req.params.id);
+  const philosopher = philosophersData.find(p => p.id === req.params.id);
   if (philosopher) {
     res.json(philosopher);
   } else {
