@@ -26,17 +26,36 @@ app.get('/health', (req, res) => {
 const fs = require('fs');
 let philosophersData = [];
 
-try {
-  const dataPath = path.join(__dirname, '..', 'philosophy-data', 'philosophers-data-full.json');
-  const rawData = fs.readFileSync(dataPath, 'utf8');
-  const parsed = JSON.parse(rawData);
-  philosophersData = parsed.philosophers || [];
-  console.log(`成功加载 ${philosophersData.length} 位哲学家数据`);
-} catch (error) {
-  console.error('加载哲学家数据失败:', error.message);
-  console.log('使用备用数据...');
-  // 备用：加载失败时使用最少数据
-  philosophersData = [];
+// 尝试多个可能的路径
+const possiblePaths = [
+  path.join(__dirname, '..', 'philosophy-data', 'philosophers-data-full.json'),
+  path.join(__dirname, 'philosophy-data', 'philosophers-data-full.json'),
+  path.join(process.cwd(), 'philosophy-data', 'philosophers-data-full.json'),
+  '/app/philosophy-data/philosophers-data-full.json',
+];
+
+let loaded = false;
+for (const dataPath of possiblePaths) {
+  try {
+    console.log(`尝试加载: ${dataPath}`);
+    if (fs.existsSync(dataPath)) {
+      const rawData = fs.readFileSync(dataPath, 'utf8');
+      const parsed = JSON.parse(rawData);
+      philosophersData = parsed.philosophers || [];
+      console.log(`✅ 成功从 ${dataPath} 加载 ${philosophersData.length} 位哲学家数据`);
+      loaded = true;
+      break;
+    }
+  } catch (error) {
+    console.log(`❌ 从 ${dataPath} 加载失败: ${error.message}`);
+  }
+}
+
+if (!loaded) {
+  console.error('⚠️ 所有路径都失败，使用内嵌数据');
+  // 内嵌核心哲学家数据（确保至少有数据可用）
+  philosophersData = require('./philosophers-data-embedded.js');
+  console.log(`使用内嵌数据: ${philosophersData.length} 位哲学家`);
 }
 
 // API 路由
