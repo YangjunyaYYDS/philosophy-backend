@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 // 静态文件服务（前端构建文件）
-app.use(express.static(path.join(__dirname, '../dist')));
+app.use(express.static(path.join(__dirname, 'dist')));
 
 // 健康检查
 app.get('/health', (req, res) => {
